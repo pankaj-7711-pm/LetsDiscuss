@@ -30,5 +30,6 @@ const userSchema = mongoose.Schema(
   { timestaps: true }
 );
 
+
 const User = mongoose.model("User", userSchema);
 module.exports = User;
