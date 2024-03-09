@@ -49,7 +49,7 @@ const server = app.listen(port, console.log("server started in port 5000"));
 const io = require("socket.io")(server, {
   pingTimeout: 60000,
   cors: {
-    origin: "http://localhost:5000",
+    origin: "https://letsdiscuss.onrender.com/",
   },
 });
 
