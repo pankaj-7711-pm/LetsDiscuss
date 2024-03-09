@@ -6,16 +6,17 @@ const { hashPassword, comparePassword } = require("../helpers/authHelper");
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password, pic } = req.body;
   if (!name || !email || !password) {
-    res.status(400);
-    throw new Error("Please Enter all the feilds");
+    return res.send({success:false, message: "Enter all fields" });
   }
 
   const hashedPassword = await hashPassword(password);
 
   const userExists = await User.findOne({ email });
   if (userExists) {
-    res.status(400);
-    throw new Error("User already exists");
+    return res.send({
+      success: false,
+      message: "Already Registered Please Login",
+    });
   }
 
   const user = await User.create({
@@ -26,16 +27,18 @@ const registerUser = asyncHandler(async (req, res) => {
   });
   if (user) {
     res.status(201).json({
+      success:true,
       _id: user._id,
       name: user.name,
       email: user.email,
-      // isAdmin: user.isAdmin,
       pic: user.pic,
       token: generateToken(user._id),
     });
   } else {
-    res.status(400);
-    throw new Error("Error in registering");
+    res.status(500).send({
+      success: false,
+      message: "Error in Registration",
+    });
   }
 });
 
@@ -44,6 +47,7 @@ const authUser = async (req, res) => {
   const user = await User.findOne({ email });
   if (user && (await comparePassword(password, user.password))) {
     res.json({
+      success:true,
       _id: user._id,
       name: user.name,
       email: user.email,
@@ -52,8 +56,10 @@ const authUser = async (req, res) => {
       token: generateToken(user._id),
     });
   } else {
-    res.status(401);
-    throw new Error("Invalid Email or Password");
+    res.json({
+      success: false,
+      message:"Invalid Email or Password"
+    });
   }
 };
 

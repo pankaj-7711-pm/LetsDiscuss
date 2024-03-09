@@ -50,22 +50,33 @@ const Login = () => {
         { email, password },
         config
       );
-
-      toast({
-        title: "Login Successful",
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-        position: "bottom",
-      });
-      // setUser(data);
-      localStorage.setItem("userInfo", JSON.stringify(data));
-      setLoading(false);
-      navigate("/chats");
+      if (data?.success) {
+        toast({
+          title: "Login Successful",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom",
+        });
+        // setUser(data);
+        localStorage.setItem("userInfo", JSON.stringify(data));
+        setLoading(false);
+        navigate("/chats");
+      }
+      else {
+        toast({
+          title: data?.message,
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom",
+        });
+      }
+      
     } catch (error) {
       toast({
         title: "Error Occured!",
-        description: error.response.data.message,
+        // description: error.response.data.message,
         status: "error",
         duration: 5000,
         isClosable: true,
@@ -110,18 +121,7 @@ const Login = () => {
       >
         Login
       </Button>
-      <Button
-        variant={"solid"}
-        colorScheme="red"
-        width={"100%"}
-        //  style={{ marginTop: 15 }}
-        onClick={() => {
-          setEmail("guest@example.com");
-          setPassword("123456");
-        }}
-      >
-        Get Guest User Credentials
-      </Button>
+      
     </VStack>
   );
 };

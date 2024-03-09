@@ -7,13 +7,12 @@ import ChatLoading from "./ChatLoading";
 import { getSender } from "../config/ChatLogic";
 import GroupChatModal from "./miscellaneous/GroupChatModal";
 
-const MyChats = ({fetchAgain}) => {
+const MyChats = ({ fetchAgain }) => {
   const [loggedUser, setLoggedUser] = useState();
 
   const { selectedChat, setSelectedChat, user, chats, setChats } = ChatState();
 
   const toast = useToast();
-  
 
   const fetchChats = async () => {
     // console.log(user._id);
@@ -103,9 +102,26 @@ const MyChats = ({fetchAgain}) => {
                 py={2}
                 borderRadius="lg"
               >
-                {!chat.isGroupChat
-                  ? getSender(loggedUser, chat.users)
-                  : chat.chatName}
+                {!chat.isGroupChat ? (
+                  <span style={{ fontWeight: "500" }}>
+                    {getSender(loggedUser, chat.users)}
+                  </span>
+                ) : (
+                  <span style={{ fontWeight: "500" }}>{chat.chatName}</span>
+                )}
+                {chat?.latestMessage ? (
+                  <div>
+                    <span style={{  fontWeight:selectedChat===chat?"300":"300" }}>
+                      {chat?.latestMessage?.sender?.name}
+                    </span>{" "}
+                    :{" "}
+                    <span style={{ fontWeight: "300" }}>
+                      {chat?.latestMessage?.content}
+                    </span>
+                  </div>
+                ) : (
+                  <></>
+                )}
               </Box>
             ))}
           </Stack>
